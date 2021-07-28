@@ -3,11 +3,11 @@ package com.example.androidtestapp.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.androidtestapp.repo.LoginRepository
+import com.example.androidtestapp.repo.MainRepository
 
 class SignUpViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val loginRepo = LoginRepository()
+    private val loginRepo = MainRepository()
     val signUpStatus = MutableLiveData<Boolean>()
     var key : String? = null
     var token : String? = null

@@ -1,5 +1,6 @@
 package com.example.androidtestapp.repo
 
+import com.example.androidtestapp.objects.LocationDataResponse
 import com.example.androidtestapp.objects.LoginDataResponse
 import com.example.androidtestapp.objects.UserDataResponse
 import retrofit2.Call
@@ -17,4 +18,7 @@ interface GetDataService {
 
     @GET("api/v2/people/{key}")
     fun fetchCurrentUser(@HeaderMap headers: Map<String, String>, @Path(value = "key", encoded = true) key : String?): Call<UserDataResponse?>
+
+    @GET("api/v2/vehicles")
+    fun fetchCurrentLocation(@HeaderMap headerMap: Map<String, String>): Call<ArrayList<LocationDataResponse?>>
 }

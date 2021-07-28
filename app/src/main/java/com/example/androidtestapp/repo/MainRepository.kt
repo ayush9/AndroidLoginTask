@@ -2,6 +2,7 @@ package com.example.androidtestapp.repo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.androidtestapp.objects.LocationDataResponse
 import com.example.androidtestapp.objects.LoginDataResponse
 import com.example.androidtestapp.objects.UserDataResponse
 import com.example.androidtestapp.repo.RetrofitClientInstance.retrofitInstance
@@ -10,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class LoginRepository {
+class MainRepository {
 
     private var loginData: MutableLiveData<LoginDataResponse?>? = null
     private var signUpData: MutableLiveData<LoginDataResponse?>? = null
@@ -108,6 +109,35 @@ class LoginRepository {
                 t: Throwable?
             ) {
                 userResponse.postValue(null)
+            }
+        })
+    }
+
+    fun fetchUserLocationDetails(
+        locationDataResponse: MutableLiveData<ArrayList<LocationDataResponse?>>,
+        token: String?
+    ) {
+        val service =
+            retrofitInstance!!.create(
+                GetDataService::class.java
+            )
+        val headerMap = HashMap<String, String>()
+        headerMap["Content-Type"] = "application/json"
+        headerMap["Authorization"] = token.toString()
+        val call: Call<ArrayList<LocationDataResponse?>> = service.fetchCurrentLocation(headerMap)
+        call.enqueue(object : Callback<ArrayList<LocationDataResponse?>> {
+            override fun onResponse(
+                call: Call<ArrayList<LocationDataResponse?>>,
+                response: Response<ArrayList<LocationDataResponse?>>
+            ) {
+                locationDataResponse.postValue(response.body())
+            }
+
+            override fun onFailure(
+                call: Call<ArrayList<LocationDataResponse?>>?,
+                t: Throwable?
+            ) {
+                locationDataResponse.postValue(null)
             }
         })
     }
