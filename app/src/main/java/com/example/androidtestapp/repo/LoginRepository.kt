@@ -1,8 +1,10 @@
-package com.example.androidtestapp
+package com.example.androidtestapp.repo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.weatherdemoapp.RetrofitClientInstance.retrofitInstance
+import com.example.androidtestapp.objects.LoginDataResponse
+import com.example.androidtestapp.objects.UserDataResponse
+import com.example.androidtestapp.repo.RetrofitClientInstance.retrofitInstance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -76,6 +78,36 @@ class LoginRepository {
                 t: Throwable?
             ) {
                 signUpData?.postValue(null)
+            }
+        })
+    }
+
+    fun fetchCurrentUser(
+        userResponse: MutableLiveData<UserDataResponse?>,
+        key: String?,
+        token: String?
+    ) {
+        val service =
+            retrofitInstance!!.create(
+                GetDataService::class.java
+            )
+        val headerMap = HashMap<String, String>()
+        headerMap["Content-Type"] = "application/json"
+        headerMap["Authorization"] = token.toString()
+        val call: Call<UserDataResponse?> = service.fetchCurrentUser(headerMap, key)
+        call.enqueue(object : Callback<UserDataResponse?> {
+            override fun onResponse(
+                call: Call<UserDataResponse?>,
+                response: Response<UserDataResponse?>
+            ) {
+                userResponse.postValue(response.body())
+            }
+
+            override fun onFailure(
+                call: Call<UserDataResponse?>?,
+                t: Throwable?
+            ) {
+                userResponse.postValue(null)
             }
         })
     }

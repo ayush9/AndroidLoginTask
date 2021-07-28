@@ -1,4 +1,4 @@
-package com.example.androidtestapp;
+package com.example.androidtestapp.utils;
 
 import java.util.regex.Pattern;
 

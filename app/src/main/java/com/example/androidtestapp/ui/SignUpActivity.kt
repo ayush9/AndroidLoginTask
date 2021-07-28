@@ -1,4 +1,4 @@
-package com.example.androidtestapp
+package com.example.androidtestapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.example.androidtestapp.utils.EmailValidation
+import com.example.androidtestapp.utils.NetworkUtil
+import com.example.androidtestapp.R
+import com.example.androidtestapp.viewmodel.SignUpViewModel
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -48,8 +52,10 @@ class SignUpActivity : AppCompatActivity() {
         signUpViewModel.signUpStatus.observe(this, Observer {
             if (it) {
                 Toast.makeText(this, "SIGNUP SUCCESS", Toast.LENGTH_LONG).show()
-//                val intent = Intent(this, HomeActivity::class.java)
-  //              startActivity(intent)
+                val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("key", signUpViewModel.key)
+                intent.putExtra("token", signUpViewModel.token)
+                startActivity(intent)
             } else {
                 Toast.makeText(this, "SIGNUP FAILED", Toast.LENGTH_LONG).show()
             }
@@ -63,14 +69,18 @@ class SignUpActivity : AppCompatActivity() {
         }else {
             if (!EmailValidation.isValidEmail(findViewById<EditText>(R.id.input_email_signup).text.toString()) ||
                 findViewById<EditText>(R.id.input_password_signup).text.toString().length < EmailValidation.PASSWORD_CHARCTER_LIMIT ||
-                findViewById<EditText>(R.id.input_password_signup).text.toString().contains(EmailValidation.PASSWORD_NULL_SPACE)
+                findViewById<EditText>(R.id.input_password_signup).text.toString().contains(
+                    EmailValidation.PASSWORD_NULL_SPACE
+                )
             ) {
                 //invalid
                 findViewById<TextView>(R.id.error_signup).visibility = View.VISIBLE
             } else {
                 //valid
                 findViewById<TextView>(R.id.error_signup).visibility = View.GONE
-                signUpViewModel.registerUser(findViewById<EditText>(R.id.input_email_signup).text.toString(), findViewById<EditText>(R.id.input_password_signup).text.toString(), findViewById<EditText>(R.id.input_name).text.toString())
+                signUpViewModel.registerUser(findViewById<EditText>(R.id.input_email_signup).text.toString(), findViewById<EditText>(
+                    R.id.input_password_signup
+                ).text.toString(), findViewById<EditText>(R.id.input_name).text.toString())
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.androidtestapp
+package com.example.androidtestapp.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,6 +17,10 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.example.androidtestapp.utils.EmailValidation
+import com.example.androidtestapp.viewmodel.LoginViewModel
+import com.example.androidtestapp.utils.NetworkUtil
+import com.example.androidtestapp.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -45,9 +49,12 @@ class LoginActivity : AppCompatActivity() {
             if (it) {
                 Toast.makeText(this, "LOGIN SUCCESS", Toast.LENGTH_LONG).show()
                 val intent = Intent(this, HomeActivity::class.java)
+                intent.putExtra("key", loginViewModel.key)
+                intent.putExtra("token", loginViewModel.token)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "LOGIN FAILED", Toast.LENGTH_LONG).show()
+                findViewById<TextView>(R.id.error_password).visibility = View.VISIBLE
             }
         })
 
@@ -64,14 +71,17 @@ class LoginActivity : AppCompatActivity() {
         }else {
             if (!EmailValidation.isValidEmail(findViewById<EditText>(R.id.input_email).text.toString()) ||
                 findViewById<EditText>(R.id.input_password).text.toString().length < EmailValidation.PASSWORD_CHARCTER_LIMIT ||
-                findViewById<EditText>(R.id.input_password).text.toString().contains(EmailValidation.PASSWORD_NULL_SPACE)
+                findViewById<EditText>(R.id.input_password).text.toString().contains(
+                    EmailValidation.PASSWORD_NULL_SPACE)
             ) {
                 //invalid
                 findViewById<TextView>(R.id.error_password).visibility = View.VISIBLE
             } else {
                 //valid
                 findViewById<TextView>(R.id.error_password).visibility = View.GONE
-                loginViewModel.nativeLogin(findViewById<EditText>(R.id.input_email).text.toString(), findViewById<EditText>(R.id.input_password).text.toString())
+                loginViewModel.nativeLogin(findViewById<EditText>(R.id.input_email).text.toString(), findViewById<EditText>(
+                    R.id.input_password
+                ).text.toString())
             }
         }
     }
@@ -111,6 +121,7 @@ class LoginActivity : AppCompatActivity() {
 
         override fun afterTextChanged(s: Editable) {
             if (s.isNotEmpty()) {
+                findViewById<TextView>(R.id.error_password).visibility = View.GONE
                 findViewById<EditText>(R.id.input_email).setCompoundDrawablesWithIntrinsicBounds(
                     0,
                     0,
@@ -143,6 +154,7 @@ class LoginActivity : AppCompatActivity() {
 
         override fun afterTextChanged(s: Editable) {
             if (s.isNotEmpty()) {
+                findViewById<TextView>(R.id.error_password).visibility = View.GONE
                 findViewById<EditText>(R.id.input_password).setCompoundDrawablesWithIntrinsicBounds(
                     0,
                     0,
