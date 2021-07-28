@@ -1,6 +1,5 @@
 package com.example.androidtestapp
 
-import com.example.weatherdemoapp.LoginDataResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers
